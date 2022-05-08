@@ -1,4 +1,6 @@
-import os, json, requests
+import os
+import json
+import requests
 from dotenv import load_dotenv
 
 
@@ -17,7 +19,7 @@ class TwitterReader:
     def generate_data(self):
         if os.path.isfile('./tickers.json') is False:
             with open('tickers.json', 'x') as f:
-                json.dumps(self.tickers, f)
+                json.dump(self.tickers, f)
             f.close()
 
     def add_ticker(self, ticker):
@@ -25,14 +27,14 @@ class TwitterReader:
             self.tickers = json.loads(f)
         if ticker not in self.tickers.keys():
             self.tickers[ticker] = ticker
-        json.dumps(self.tickers, f)
+        json.dump(self.tickers, f)
         f.close()
 
     def delete_ticker(self, ticker):
         with open('tickers.json', 'x') as f:
             self.tickers = json.loads(f)
         self.ticker.pop(ticker, None)
-        json.dumps(self.tickers, f) 
+        json.dump(self.tickers, f)
         f.close()
 
     def load_api(self):
@@ -42,7 +44,8 @@ class TwitterReader:
         return False
 
     def get_tweets(self):
-        response = requests.get(self.api_url, headers={'Authorization': f'Bearer {self.bearer}'}).json()
+        response = requests.get(self.api_url, headers={
+                                'Authorization': f'Bearer {self.bearer}'}).json()
         for ticker in self.tickers:
             for tweet in response['data']:
                 tweet_id = tweet['id']
